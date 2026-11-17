@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_mascot.html" import mascot %}
+{% from "_macros.html" import note_card %}
+{% block title %}My Notes{% endblock %}
+{% block content %}
+<section class="panel" aria-labelledby="page-title">
+  <header class="panel__header">
+    <div class="panel__title">{{ icon('folder', 34) }}<h1 id="page-title">My Notes</h1></div>
+    <a class="btn btn--primary" href="{{ url_for('notes.new') }}">{{ icon('plus', 18) }} New note</a>
+  </header>
+
+  <div class="toolbar">
+    <nav class="tabs" aria-label="Filter notes">
+      {% for key, label, count in [('all', 'All', counts.total), ('favorites', 'Favorites', counts.favorites), ('completed', 'Completed', counts.completed)] %}
+      <a class="tab{{ ' is-active' if active == key }}" href="{{ url_for('notes.index', filter=(key if key != 'all' else none), q=(q or none)) }}"{% if active == key %} aria-current="page"{% endif %}>
+        {{ label }} <span class="tab__count">{{ count }}</span>
+      </a>
+      {% endfor %}
+    </nav>
+    <form class="search search--inline" method="get" action="{{ url_for('notes.index') }}" role="search">
+      {% if active != 'all' %}<input type="hidden" name="filter" value="{{ active }}">{% endif %}
+      <label class="sr-only" for="notes-search">Search titles and content</label>
+      {{ icon('search', 20) }}
+      <input id="notes-search" type="search" name="q" value="{{ q }}" placeholder="Search titles and content" maxlength="100">
+      <button type="submit" class="btn btn--small btn--primary">Search</button>
+    </form>
+  </div>
+
+  {% if q %}
+  <p class="results-note" aria-live="polite">{{ notes|length }} result{{ '' if notes|length == 1 else 's' }} for “{{ q }}”. <a href="{{ url_for('notes.index', filter=(active if active != 'all' else none)) }}">Clear search</a></p>
+  {% endif %}
+
+  {% if notes %}
+  <ul class="note-grid">
+    {% for note in notes %}<li>{{ note_card(note, show_actions=True) }}</li>{% endfor %}
+  </ul>
+  {% elif counts.total == 0 %}
+  <div class="empty-state">
+    {{ mascot(110) }}
+    <h2>Your board is empty</h2>
+    <p>Pin your first note to get started.</p>
+    <a class="btn btn--primary" href="{{ url_for('notes.new') }}">{{ icon('plus', 18) }} Create a note</a>
+  </div>
+  {% else %}
+  <div class="empty-state empty-state--small">
+    <h2>No notes match</h2>
+    <p class="muted">Try a different search or filter.</p>
+    <a class="btn btn--outline btn--small" href="{{ url_for('notes.index') }}">Show all notes</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

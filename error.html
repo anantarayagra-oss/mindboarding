@@ -1,0 +1,12 @@
+{% extends "base.html" if g.user else "base_public.html" %}
+{% from "_mascot.html" import mascot %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<section class="panel panel--center">
+  {{ mascot(110) }}
+  <p class="eyebrow">Error {{ code }}</p>
+  <h1>{{ title }}</h1>
+  <p>{{ message }}</p>
+  <a class="btn btn--primary" href="{{ url_for('pages.home') if g.user else url_for('auth.login') }}">{{ 'Back to Home' if g.user else 'Go to Login' }}</a>
+</section>
+{% endblock %}

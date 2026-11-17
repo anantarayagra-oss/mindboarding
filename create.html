@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_macros.html" import csrf_field, field_error with context %}
+
+{#- One question editor. `n` is the field-name index (a number, or __N__ for the JavaScript template). -#}
+{% macro question_block(n, q, number) %}
+<fieldset class="question-block" data-question-block>
+  <legend><span data-question-label>Question {{ number }}</span></legend>
+  <button type="button" class="btn btn--ghost btn--small question-block__remove" data-remove-question>{{ icon('trash', 16) }} Remove question</button>
+  <div class="field">
+    <label for="q-{{ n }}-prompt">Question</label>
+    <input type="text" id="q-{{ n }}-prompt" name="q-{{ n }}-prompt" maxlength="300" value="{{ q.prompt }}" required>
+  </div>
+  <p class="field-hint">Write at least two answers, then select the correct one.</p>
+  <div class="options">
+    {% for m in range(4) %}
+    <div class="option-row">
+      <input type="radio" id="q-{{ n }}-correct-{{ m }}" name="q-{{ n }}-correct" value="{{ m }}" aria-label="Answer {{ 'ABCD'[m] }} is correct"{% if q.correct == m %} checked{% endif %} required>
+      <label class="sr-only" for="q-{{ n }}-opt-{{ m }}">Answer {{ 'ABCD'[m] }}</label>
+      <input type="text" id="q-{{ n }}-opt-{{ m }}" name="q-{{ n }}-opt-{{ m }}" maxlength="150" placeholder="Answer {{ 'ABCD'[m] }}" value="{{ q.options[m] }}">
+    </div>
+    {% endfor %}
+  </div>
+  <div class="field">
+    <label for="q-{{ n }}-explanation">Explanation (optional)</label>
+    <input type="text" id="q-{{ n }}-explanation" name="q-{{ n }}-explanation" maxlength="300" placeholder="Why is this the correct answer?" value="{{ q.explanation }}">
+  </div>
+  {% for message in q.errors %}<p class="field-error">{{ message }}</p>{% endfor %}
+</fieldset>
+{% endmacro %}
+
+{% block title %}New quiz{% endblock %}
+{% block content %}
+<section class="panel panel--form" aria-labelledby="page-title">
+  <a class="link-arrow link-arrow--back" href="{{ url_for('quizzes.index') }}">{{ icon('back', 18) }} Back to Quizzes</a>
+  <h1 id="page-title">New quiz</h1>
+  <p class="muted">Write your own multiple-choice questions. No AI is involved.</p>
+
+  <form method="post" novalidate data-loading-form>
+    {{ csrf_field() }}
+    <div class="field{{ ' has-error' if errors.title }}">
+      <label for="title">Quiz title</label>
+      <input id="title" name="title" type="text" maxlength="100" value="{{ title }}" required
+             {% if errors.title %}aria-describedby="title-error" aria-invalid="true"{% endif %}>
+      {{ field_error(errors, 'title') }}
+    </div>
+    <div class="field{{ ' has-error' if errors.description }}">
+      <label for="description">Description (optional)</label>
+      <input id="description" name="description" type="text" maxlength="300" value="{{ description }}"
+             {% if errors.description %}aria-describedby="description-error" aria-invalid="true"{% endif %}>
+      {{ field_error(errors, 'description') }}
+    </div>
+
+    {% if errors.questions %}<p class="form-alert" role="alert">{{ errors.questions }}</p>{% endif %}
+
+    <div id="question-list" data-next-index="{{ next_index }}" data-max="{{ max_questions }}">
+      {% for q in questions %}{{ question_block(q.index, q, loop.index) }}{% endfor %}
+    </div>
+    <template id="question-template">{{ question_block('__N__', blank, 0) }}</template>
+
+    <div class="button-row">
+      <button type="button" class="btn btn--outline" data-add-question>{{ icon('plus', 18) }} Add question</button>
+    </div>
+    <div class="button-row button-row--end">
+      <a class="btn btn--outline" href="{{ url_for('quizzes.index') }}">Cancel</a>
+      <button type="submit" class="btn btn--primary" data-loading-text="Saving…">Save quiz</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

@@ -1,58 +1,91 @@
-AI-powered interactive note-taking and learning platform.
+# Mindboarding
 
-Mindboarding is a learning platform that transforms ordinary notes into interactive learning experiences with AI assistance.
+An interactive note-taking and learning web app styled like a colorful school bulletin board.
+Built as a CS50x Final Project with Flask, SQLite, HTML, CSS and vanilla JavaScript.
 
-Vision
+## What works today
 
-Make learning more enjoyable by helping users organize, understand, and explore their own notes through an interactive digital bulletin board.
+- **Accounts:** register, log in, log out, change username and password (hashed passwords, CSRF protection).
+- **My Notes:** create, view, edit, delete (with a confirmation page), search titles and content, favorite, mark complete, filter by All / Favorites / Completed. Every new account starts with nine editable sample notes.
+- **Quizzes:** write your own multiple-choice quizzes, take them, get a server-calculated score with explanations, and review your quiz history.
+- **Dashboard:** your most recent notes, your latest real quiz results, and the motivational note.
+- **Notifications:** a real bell panel. Notifications are created only by real events (finishing a quiz, changing your username or password).
 
-Main Features
+## Coming soon (placeholders only)
 
-- **My Notes:** Create, organize, search, edit, and favorite notes.
-- **AI Learning:** Summarize notes, explain difficult concepts, and brainstorm ideas.
-- **Quiz Generator:** Generate practice quizzes from personal notes.
-- **Quiz History:** Track previous quiz attempts and scores.
+AI Learning, Quick AI Actions and Insights are visible but clearly marked "Coming soon". No AI is called and no analytics are calculated.
 
-Design Concept
+## Setup
 
-Inspired by a colorful school bulletin board:
+```bash
+python3 -m venv venv
+source venv/bin/activate            # Windows: venv\Scripts\activate
+pip install -r requirements.txt
 
-- Warm golden-orange corkboard.
-- Cream paper cards and colorful sticky notes.
-- Pushpins and playful decorations.
-- Friendly typography.
-- A yellow sticky-note mascot wearing nerd glasses.
+cp .env.example .env                # then edit .env and set SECRET_KEY
+flask --app app init-db             # optional: the app also creates tables on startup
+flask --app app run --debug
+```
 
-Technology Stack
+Open http://127.0.0.1:5000 and create an account.
 
-| Layer | Technology |
-|---|---|
-| Frontend | HTML, CSS, JavaScript |
-| Backend | Python, Flask |
-| Database | SQLite |
-| AI | Modular AI API integration |
+Generate a secret key with: `python -c "import secrets; print(secrets.token_hex(32))"`.
+If `SECRET_KEY` is missing, the app uses a temporary random key for development (sessions reset on every restart).
 
-Project Structure
+## Tests
+
+```bash
+python -m unittest discover -v
+```
+
+The tests use Python's built-in `unittest` and a temporary database, so they never touch your real data.
+
+## Project structure
 
 ```text
 mindboarding/
-├── assets/
-│   └── design/
-├── backend/
-├── docs/
-│   └── PRD.md
-├── frontend/
-└── README.md
+├── app.py              application factory, security headers, error pages
+├── auth.py             register, login, logout, login_required
+├── notes.py            notes CRUD, search, favorites, completion
+├── quizzes.py          quiz builder, taking, scoring, history
+├── pages.py            dashboard, account, placeholder pages
+├── notifications.py    real notifications
+├── database.py         SQLite connection helpers and init-db command
+├── schema.sql          tables, constraints, indexes
+├── security.py         CSRF protection and safe redirects
+├── validators.py       username / password rules
+├── starter_notes.py    the nine sample notes
+├── templates/          Jinja2 pages and reusable parts
+├── static/css/         style.css (design system)
+├── static/js/          app.js (menus, drawer, quiz builder)
+├── tests/              automated tests
+└── docs/PRD.md         product requirements
 ```
-Documentation
 
-See [Product Requirements Document](docs/PRD.md) for the complete product specifications and development scope.
+## Security notes
 
-Development Status
+- Passwords are hashed with Werkzeug (`generate_password_hash`); plain passwords are never stored.
+- Every form carries a CSRF token; state-changing requests without it are rejected.
+- All SQL uses `?` placeholders (no string-built queries) and every user-owned query filters by `user_id`.
+- Jinja2 escapes all user text; a Content-Security-Policy blocks inline scripts.
+- Session cookies are `HttpOnly` and `SameSite=Lax` (set `SESSION_COOKIE_SECURE=1` behind HTTPS).
+- Login errors are generic and use a dummy hash check so timing does not reveal which usernames exist.
 
-Currently in the initial planning and foundation stage.
+## Known limitations
 
-Project Goal
+- No login rate limiting or account lockout.
+- No password reset, email, or account deletion.
+- Times are stored in UTC and shown as dates only.
+- Quizzes cannot be edited after creation (they can be deleted).
+- Fonts load from Google Fonts (system fonts are used if offline).
+- The JavaScript and layout have not been checked in a real browser by the author of this code; see the review checklist.
 
-Built as a CS50x Final Project to demonstrate practical software development, database management, backend programming, frontend design, and AI integration.# mindboarding
-AI-powered interactive note-taking and learning platform
+## AI-assistance attribution
+
+Parts of this project were written with help from Claude (Anthropic). A suggested comment for the top of each file you submit:
+
+```python
+# Mindboarding: CS50x Final Project.
+# Portions of this file were generated with the assistance of Claude (Anthropic)
+# and were reviewed, understood, and tested by me.
+```

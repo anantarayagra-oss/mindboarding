@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_macros.html" import csrf_field with context %}
+{% block title %}{{ quiz.title }}{% endblock %}
+{% block content %}
+<section class="panel panel--form" aria-labelledby="page-title">
+  <a class="link-arrow link-arrow--back" href="{{ url_for('quizzes.index') }}">{{ icon('back', 18) }} Back to Quizzes</a>
+  <h1 id="page-title">{{ quiz.title }}</h1>
+  {% if quiz.description %}<p class="muted">{{ quiz.description }}</p>{% endif %}
+
+  <form method="post" data-loading-form>
+    {{ csrf_field() }}
+    {% for q in questions %}
+    <fieldset class="question-card">
+      <legend><span class="question-card__number">{{ loop.index }}.</span> {{ q.prompt }}</legend>
+      {% for c in q.choices %}
+      <label class="choice">
+        <input type="radio" name="question-{{ q.id }}" value="{{ c.id }}"{% if selected.get(q.id) == c.id|string %} checked{% endif %} required>
+        <span>{{ c.text }}</span>
+      </label>
+      {% endfor %}
+    </fieldset>
+    {% endfor %}
+    <div class="button-row button-row--end">
+      <a class="btn btn--outline" href="{{ url_for('quizzes.index') }}">Cancel</a>
+      <button type="submit" class="btn btn--primary" data-loading-text="Scoring…">Submit answers</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

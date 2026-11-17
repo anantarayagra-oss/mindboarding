@@ -1,0 +1,48 @@
+{% from "_icons.html" import icon %}
+
+{% macro csrf_field() -%}
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+{%- endmacro %}
+
+{#- Shows the error message for one form field, if there is one. -#}
+{% macro field_error(errors, name) -%}
+{% if errors and errors.get(name) %}<p class="field-error" id="{{ name }}-error">{{ errors[name] }}</p>{% endif %}
+{%- endmacro %}
+
+{#- One sticky-note card. The checkbox-like button toggles "completed"; the star toggles "favorite". -#}
+{% macro note_card(note, show_actions=False) -%}
+<article class="note-card note-card--{{ note.color }}{{ ' is-completed' if note.is_completed }}">
+  <div class="note-card__top">
+    <form method="post" action="{{ url_for('notes.toggle_complete', note_id=note.id) }}">
+      {{ csrf_field() }}
+      <button type="submit" class="check-btn{{ ' is-on' if note.is_completed }}" aria-pressed="{{ 'true' if note.is_completed else 'false' }}" aria-label="Completed: {{ note.title }}">{{ icon('check', 16) }}</button>
+    </form>
+    <form method="post" action="{{ url_for('notes.toggle_favorite', note_id=note.id) }}">
+      {{ csrf_field() }}
+      <button type="submit" class="fav-btn{{ ' is-on' if note.is_favorite }}" aria-pressed="{{ 'true' if note.is_favorite else 'false' }}" aria-label="Favorite: {{ note.title }}">{{ icon('star', 20) }}</button>
+    </form>
+  </div>
+  <h3 class="note-card__title"><a href="{{ url_for('notes.view', note_id=note.id) }}">{{ note.title }}</a></h3>
+  <p class="note-card__preview">{{ note.content|truncate(120, True) }}</p>
+  <footer class="note-card__footer">
+    <span class="note-card__date">{{ icon('clock', 16) }}<time datetime="{{ note.updated_at }}">{{ note.updated_at|pretty_date }}</time></span>
+    {% if show_actions %}
+    <span class="note-card__actions">
+      <a class="icon-btn icon-btn--small" href="{{ url_for('notes.edit', note_id=note.id) }}" aria-label="Edit {{ note.title }}">{{ icon('pencil', 18) }}</a>
+      <a class="icon-btn icon-btn--small" href="{{ url_for('notes.delete', note_id=note.id) }}" aria-label="Delete {{ note.title }}">{{ icon('trash', 18) }}</a>
+    </span>
+    {% endif %}
+  </footer>
+</article>
+{%- endmacro %}
+
+{#- A donut chart for a real quiz score. pathLength=100 lets us use the percentage directly. -#}
+{% macro donut(pct) -%}
+<div class="donut">
+  <svg viewBox="0 0 36 36" role="img" aria-label="Score: {{ pct }} percent">
+    <circle class="donut__track" cx="18" cy="18" r="15.9155" pathLength="100"/>
+    <circle class="donut__value" cx="18" cy="18" r="15.9155" pathLength="100" stroke-dasharray="{{ pct }} 100" transform="rotate(-90 18 18)"/>
+  </svg>
+  <span class="donut__label">{{ pct }}%</span>
+</div>
+{%- endmacro %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_macros.html" import donut %}
+{% block title %}Results: {{ attempt.quiz_title }}{% endblock %}
+{% block content %}
+{% set pct = attempt.score|percent(attempt.total) %}
+<section class="panel panel--form" aria-labelledby="page-title">
+  <a class="link-arrow link-arrow--back" href="{{ url_for('quizzes.index') }}">{{ icon('back', 18) }} Back to Quizzes</a>
+  <div class="result-hero result-hero--large">
+    {{ donut(pct) }}
+    <div>
+      <p class="eyebrow">Results</p>
+      <h1 id="page-title">{{ attempt.quiz_title }}</h1>
+      <p class="muted">{{ attempt.score }} of {{ attempt.total }} correct · {{ attempt.created_at|pretty_date }}</p>
+      <span class="pill pill--success">{{ icon('check', 16) }} {{ pct|score_label }}</span>
+    </div>
+  </div>
+
+  <h2 class="sr-only">Answer review</h2>
+  <ol class="review">
+    {% for item in review %}
+    <li class="question-card {{ 'is-right' if item.was_correct else 'is-wrong' }}">
+      <p class="question-card__prompt">{{ item.prompt }}</p>
+      <p class="verdict">{% if item.was_correct %}{{ icon('check', 18) }} Correct{% else %}{{ icon('x', 18) }} Not quite{% endif %}</p>
+      <ul class="review__choices">
+        {% for c in item.choices %}
+        <li class="review__choice{{ ' is-correct' if c.is_correct }}{{ ' is-chosen' if c.id == item.chosen_id }}">
+          <span>{{ c.text }}</span>
+          {% if c.id == item.chosen_id %}<span class="tag">Your answer</span>{% endif %}
+          {% if c.is_correct %}<span class="tag tag--good">Correct answer</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% if item.explanation %}<p class="explanation"><strong>Why:</strong> {{ item.explanation }}</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+
+  <div class="button-row">
+    <a class="btn btn--primary" href="{{ url_for('quizzes.take', quiz_id=attempt.quiz_id) }}">Try again</a>
+    <a class="btn btn--outline" href="{{ url_for('quizzes.index') }}">All quizzes</a>
+  </div>
+</section>
+{% endblock %}

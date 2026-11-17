@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_mascot.html" import mascot %}
+{% from "_macros.html" import note_card, donut %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1 class="sr-only">Home</h1>
+<div class="dashboard">
+
+  <section class="panel panel--notes" aria-labelledby="notes-heading">
+    <header class="panel__header">
+      <div class="panel__title">{{ icon('folder', 34) }}<h2 id="notes-heading">My Notes</h2></div>
+      <div class="panel__tools">
+        <a class="btn btn--primary btn--small" href="{{ url_for('notes.new') }}">{{ icon('plus', 16) }} New note</a>
+        <a class="link-arrow" href="{{ url_for('notes.index') }}">View all {{ icon('arrow', 18) }}</a>
+      </div>
+    </header>
+    {% if notes %}
+    <ul class="note-grid note-grid--compact">
+      {% for note in notes %}<li>{{ note_card(note) }}</li>{% endfor %}
+    </ul>
+    {% if note_total > notes|length %}
+    <p class="panel__hint">Showing your {{ notes|length }} most recent notes of {{ note_total }}.</p>
+    {% endif %}
+    {% else %}
+    <div class="empty-state">
+      {{ mascot(110) }}
+      <h3>Your board is empty</h3>
+      <p>Pin your first note to get started.</p>
+      <a class="btn btn--primary" href="{{ url_for('notes.new') }}">{{ icon('plus', 18) }} Create a note</a>
+    </div>
+    {% endif %}
+  </section>
+
+  <div class="dashboard__side">
+    <section class="panel panel--ai" aria-labelledby="ai-heading">
+      <header class="panel__header">
+        <div class="panel__title">{{ icon('sparkles', 28) }}<h2 id="ai-heading">Quick AI Actions</h2></div>
+        <span class="pill pill--soft">Coming soon</span>
+      </header>
+      <ul class="ai-grid">
+        {% for label, icon_name, tone in [('Summarize Note', 'wand', 'lavender'), ('Explain Concept', 'bulb', 'peach'), ('Brainstorm Ideas', 'message', 'blue'), ('Create Quiz', 'clipboard', 'periwinkle')] %}
+        <li>
+          <button type="button" class="ai-tile ai-tile--{{ tone }}" disabled aria-disabled="true">
+            {{ icon(icon_name, 34) }}
+            <span class="ai-tile__label">{{ label }}</span>
+            <span class="ai-tile__soon">Coming soon</span>
+          </button>
+        </li>
+        {% endfor %}
+      </ul>
+      <p class="panel__hint">These are previews. No AI features are active yet.</p>
+    </section>
+
+    <aside class="sticky-note" aria-label="Motivational note">
+      <span class="pushpin" aria-hidden="true"></span>
+      <p class="sticky-note__text">Small steps lead to big progress!</p>
+      <svg class="sticky-note__smile" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false"><path d="M8 18c3 11 21 11 24 0" fill="none" stroke="#C0612B" stroke-width="3" stroke-linecap="round"/><path d="M6 8c1-2 3-3 5-3M34 8c-1-2-3-3-5-3" fill="none" stroke="#C0612B" stroke-width="3" stroke-linecap="round"/></svg>
+    </aside>
+
+    <section class="panel panel--quiz" aria-labelledby="quiz-heading">
+      <header class="panel__header">
+        <div class="panel__title">{{ icon('trophy', 30) }}<h2 id="quiz-heading">Recent Quiz Results</h2></div>
+        <a class="link-arrow" href="{{ url_for('quizzes.index') }}">View all {{ icon('arrow', 18) }}</a>
+      </header>
+      {% if recent_attempts %}
+      {% set latest = recent_attempts[0] %}
+      {% set pct = latest.score|percent(latest.total) %}
+      <div class="result-hero">
+        {{ donut(pct) }}
+        <div>
+          <h3 class="result-hero__title"><a href="{{ url_for('quizzes.result', attempt_id=latest.id) }}">{{ latest.title }}</a></h3>
+          <p class="muted">{{ latest.created_at|pretty_date }} · {{ latest.score }} of {{ latest.total }} correct</p>
+          <span class="pill pill--success">{{ icon('check', 16) }} {{ pct|score_label }}</span>
+        </div>
+      </div>
+      {% if recent_attempts|length > 1 %}
+      <ul class="result-list">
+        {% for a in recent_attempts[1:] %}
+        <li><a href="{{ url_for('quizzes.result', attempt_id=a.id) }}">{{ a.title }}</a><span>{{ a.score }}/{{ a.total }} · {{ a.created_at|pretty_date }}</span></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% else %}
+      <div class="empty-state empty-state--small">
+        <p><strong>No quiz attempts yet.</strong></p>
+        <p class="muted">Create a quiz and take it. Your results will show up here.</p>
+        <a class="btn btn--outline btn--small" href="{{ url_for('quizzes.index') }}">Go to Quizzes</a>
+      </div>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

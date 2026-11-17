@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_mascot.html" import mascot %}
+{% block title %}Quizzes{% endblock %}
+{% block content %}
+<div class="two-col">
+  <section class="panel" aria-labelledby="quizzes-heading">
+    <header class="panel__header">
+      <div class="panel__title">{{ icon('quiz', 32) }}<h1 id="quizzes-heading">My Quizzes</h1></div>
+      <a class="btn btn--primary" href="{{ url_for('quizzes.create') }}">{{ icon('plus', 18) }} New quiz</a>
+    </header>
+    {% if quizzes %}
+    <ul class="quiz-list">
+      {% for quiz in quizzes %}
+      <li class="quiz-card">
+        <div>
+          <h2 class="quiz-card__title">{{ quiz.title }}</h2>
+          {% if quiz.description %}<p class="muted">{{ quiz.description }}</p>{% endif %}
+          <p class="quiz-card__meta">{{ quiz.question_count }} question{{ '' if quiz.question_count == 1 else 's' }} · taken {{ quiz.attempt_count }} time{{ '' if quiz.attempt_count == 1 else 's' }}</p>
+        </div>
+        <div class="button-row">
+          <a class="btn btn--primary btn--small" href="{{ url_for('quizzes.take', quiz_id=quiz.id) }}">Take quiz</a>
+          <a class="icon-btn icon-btn--small" href="{{ url_for('quizzes.delete', quiz_id=quiz.id) }}" aria-label="Delete {{ quiz.title }}">{{ icon('trash', 18) }}</a>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty-state">
+      {{ mascot(110) }}
+      <h2>No quizzes yet</h2>
+      <p>Write your own multiple-choice questions, then test yourself.</p>
+      <a class="btn btn--primary" href="{{ url_for('quizzes.create') }}">{{ icon('plus', 18) }} Create your first quiz</a>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="panel" aria-labelledby="history-heading">
+    <header class="panel__header">
+      <div class="panel__title">{{ icon('trophy', 30) }}<h2 id="history-heading">Quiz History</h2></div>
+    </header>
+    {% if history %}
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th scope="col">Quiz</th><th scope="col">Score</th><th scope="col">Date</th></tr></thead>
+        <tbody>
+          {% for a in history %}
+          <tr>
+            <td><a href="{{ url_for('quizzes.result', attempt_id=a.id) }}">{{ a.title }}</a></td>
+            <td>{{ a.score }}/{{ a.total }} ({{ a.score|percent(a.total) }}%)</td>
+            <td>{{ a.created_at|pretty_date }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state empty-state--small">
+      <p><strong>No attempts yet.</strong></p>
+      <p class="muted">Your scores will appear here after you take a quiz.</p>
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_mascot.html" import mascot %}
+{% block title %}AI Learning{% endblock %}
+{% block content %}
+<section class="panel" aria-labelledby="page-title">
+  <header class="panel__header">
+    <div class="panel__title">{{ icon('sparkles', 32) }}<h1 id="page-title">AI Learning</h1></div>
+    <span class="pill pill--soft">Coming soon</span>
+  </header>
+
+  <div class="coming-soon">
+    {{ mascot(120) }}
+    <div>
+      <h2>Study your own notes with AI</h2>
+      <p>In a future version, you'll be able to pick one of your notes and explore it: ask for summaries, explanations, examples and fresh ideas.</p>
+      <p class="muted">Nothing on this page is active yet. No AI is running, and your notes are not being analyzed.</p>
+    </div>
+  </div>
+
+  <div class="preview" aria-label="Preview of the future AI Learning layout (not active)">
+    <p class="preview__label">Preview · not active</p>
+    <div class="preview__grid">
+      <div class="preview__pane">
+        <label class="preview__heading" for="preview-note">1. Choose a note</label>
+        <select id="preview-note" disabled aria-disabled="true">
+          <option>Select a note (coming soon)</option>
+          {% for n in note_titles %}<option>{{ n.title }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="preview__pane">
+        <p class="preview__heading">2. Ask something</p>
+        <div class="preview__chat">The conversation will appear here.</div>
+        <div class="preview__input">
+          <input type="text" disabled aria-disabled="true" placeholder="Ask about your note (coming soon)" aria-label="Ask about your note (not available yet)">
+          <button type="button" class="btn btn--primary btn--small" disabled aria-disabled="true">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

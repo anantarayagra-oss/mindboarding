@@ -1,0 +1,39 @@
+{% from "_icons.html" import icon %}
+{% from "_mascot.html" import mascot %}
+{% from "_macros.html" import csrf_field with context %}
+{% set ep = request.endpoint or '' %}
+{% set items = [
+  ('Home', 'pages.home', 'home', ep == 'pages.home'),
+  ('My Notes', 'notes.index', 'notes', ep.startswith('notes.')),
+  ('AI Learning', 'pages.ai_learning', 'sparkles', ep == 'pages.ai_learning'),
+  ('Quizzes', 'quizzes.index', 'quiz', ep.startswith('quizzes.')),
+  ('Insights', 'pages.insights', 'chart', ep == 'pages.insights'),
+  ('Account', 'pages.account', 'user', ep.startswith('pages.account')),
+] %}
+<aside class="sidebar" id="sidebar" aria-label="Sidebar">
+  <div class="sidebar__brand">
+    <a href="{{ url_for('pages.home') }}" class="brand" aria-label="Mindboarding home">
+      {{ mascot(88) }}
+      <span class="brand__name">Mindboarding</span>
+      <svg class="brand__squiggle" viewBox="0 0 140 10" aria-hidden="true" focusable="false"><path d="M3 6C25 1 40 9 62 5s40-4 75 0" fill="none" stroke="#F08FA0" stroke-width="3" stroke-linecap="round"/></svg>
+    </a>
+    <button type="button" class="icon-btn sidebar__close" data-drawer-close aria-label="Close menu">{{ icon('x') }}</button>
+  </div>
+
+  <nav class="nav" aria-label="Main">
+    <ul>
+      {% for label, endpoint, icon_name, active in items %}
+      <li>
+        <a class="nav__link{{ ' is-active' if active }}" href="{{ url_for(endpoint) }}"{% if active %} aria-current="page"{% endif %}>
+          {{ icon(icon_name) }}<span>{{ label }}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </nav>
+
+  <form class="sidebar__footer" method="post" action="{{ url_for('auth.logout') }}">
+    {{ csrf_field() }}
+    <button type="submit" class="btn btn--outline btn--block">{{ icon('logout', 20) }} Log Out</button>
+  </form>
+</aside>

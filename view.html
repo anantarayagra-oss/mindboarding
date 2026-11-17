@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_macros.html" import csrf_field with context %}
+{% block title %}{{ note.title }}{% endblock %}
+{% block content %}
+<section class="panel panel--form">
+  <a class="link-arrow link-arrow--back" href="{{ url_for('notes.index') }}">{{ icon('back', 18) }} All notes</a>
+  <article class="note-sheet note-sheet--{{ note.color }}{{ ' is-completed' if note.is_completed }}">
+    <header class="note-sheet__header">
+      <h1>{{ note.title }}</h1>
+      <div class="note-sheet__toggles">
+        <form method="post" action="{{ url_for('notes.toggle_complete', note_id=note.id) }}">
+          {{ csrf_field() }}
+          <button type="submit" class="btn btn--small btn--outline" aria-pressed="{{ 'true' if note.is_completed else 'false' }}">{{ icon('check', 16) }} {{ 'Completed' if note.is_completed else 'Mark complete' }}</button>
+        </form>
+        <form method="post" action="{{ url_for('notes.toggle_favorite', note_id=note.id) }}">
+          {{ csrf_field() }}
+          <button type="submit" class="btn btn--small btn--outline fav-toggle{{ ' is-on' if note.is_favorite }}" aria-pressed="{{ 'true' if note.is_favorite else 'false' }}">{{ icon('star', 16) }} {{ 'Favorite' if note.is_favorite else 'Add to favorites' }}</button>
+        </form>
+      </div>
+    </header>
+    <p class="note-sheet__body">{{ note.content or 'This note is empty.' }}</p>
+    <footer class="note-sheet__footer">
+      <p class="muted">Created {{ note.created_at|pretty_date }} · Updated {{ note.updated_at|pretty_date }}</p>
+      <div class="button-row">
+        <a class="btn btn--primary btn--small" href="{{ url_for('notes.edit', note_id=note.id) }}">{{ icon('pencil', 16) }} Edit</a>
+        <a class="btn btn--outline btn--small" href="{{ url_for('notes.delete', note_id=note.id) }}">{{ icon('trash', 16) }} Delete</a>
+      </div>
+    </footer>
+  </article>
+</section>
+{% endblock %}

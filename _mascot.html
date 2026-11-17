@@ -1,0 +1,24 @@
+{#- The Mindboarding mascot: a yellow sticky note with a folded bottom-left corner,
+    dark brown nerd glasses, pink cheeks, a small mouth and a red pushpin. -#}
+{% macro mascot(size=96) -%}
+<svg class="mascot" width="{{ size }}" height="{{ size }}" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+  <g stroke="#E8943A" stroke-width="3" stroke-linecap="round" fill="none">
+    <path d="M12 38 22 42M10 56 21 56M104 38 96 43M110 55 100 56"/>
+  </g>
+  <g transform="rotate(-4 60 66)">
+    <path d="M28 26H92a6 6 0 0 1 6 6V96a6 6 0 0 1-6 6H46L22 78V32a6 6 0 0 1 6-6Z" fill="#FBE49A" stroke="#E2B94C" stroke-width="2"/>
+    <path d="M22 78 46 102V86a8 8 0 0 0-8-8Z" fill="#EFC75A" stroke="#E2B94C" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="44" cy="58" r="11" fill="#FFF8E0" stroke="#5A3A26" stroke-width="3.5"/>
+    <circle cx="76" cy="58" r="11" fill="#FFF8E0" stroke="#5A3A26" stroke-width="3.5"/>
+    <path d="M55 58H65M33 56 26 53M87 56 94 53" stroke="#5A3A26" stroke-width="3.5" stroke-linecap="round"/>
+    <circle cx="44" cy="59" r="2.8" fill="#3F2B1F"/>
+    <circle cx="76" cy="59" r="2.8" fill="#3F2B1F"/>
+    <ellipse cx="36" cy="76" rx="6" ry="4" fill="#F6A5B0"/>
+    <ellipse cx="84" cy="76" rx="6" ry="4" fill="#F6A5B0"/>
+    <path d="M54 78Q60 84 66 78" stroke="#3F2B1F" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+    <path d="M60 27V32" stroke="#8C2A22" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="60" cy="21" r="8" fill="#D9382E"/>
+    <circle cx="57.5" cy="18.5" r="2.4" fill="#fff" opacity=".6"/>
+  </g>
+</svg>
+{%- endmacro %}

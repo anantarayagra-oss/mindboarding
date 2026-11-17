@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "_icons.html" import icon %}
+{% from "_mascot.html" import mascot %}
+{% block title %}Insights{% endblock %}
+{% block content %}
+<section class="panel" aria-labelledby="page-title">
+  <header class="panel__header">
+    <div class="panel__title">{{ icon('chart', 32) }}<h1 id="page-title">Insights</h1></div>
+    <span class="pill pill--soft">Coming soon</span>
+  </header>
+  <div class="coming-soon">
+    {{ mascot(120) }}
+    <div>
+      <h2>See how your learning grows</h2>
+      <p>Insights will one day help you look back on your progress. We're still building it.</p>
+      <p class="muted">There are no charts or statistics here yet, and nothing is being calculated.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

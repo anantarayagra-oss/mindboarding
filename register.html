@@ -1,0 +1,40 @@
+{% extends "base_public.html" %}
+{% from "_macros.html" import csrf_field, field_error with context %}
+{% from "_mascot.html" import mascot %}
+{% block title %}Create account{% endblock %}
+{% block content %}
+<section class="auth-card panel">
+  <div class="auth-card__brand">
+    {{ mascot(96) }}
+    <p class="brand__name">Mindboarding</p>
+  </div>
+  <h1>Create your account</h1>
+  <p class="muted">A username and a password are all you need.</p>
+
+  <form method="post" novalidate data-loading-form>
+    {{ csrf_field() }}
+    <div class="field{{ ' has-error' if errors.username }}">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" value="{{ username }}" autocomplete="username" autocapitalize="none" maxlength="20" required autofocus
+             aria-describedby="username-hint{{ ' username-error' if errors.username }}"{% if errors.username %} aria-invalid="true"{% endif %}>
+      <p class="field-hint" id="username-hint">3 to 20 letters, numbers or underscores.</p>
+      {{ field_error(errors, 'username') }}
+    </div>
+    <div class="field{{ ' has-error' if errors.password }}">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required
+             aria-describedby="password-hint{{ ' password-error' if errors.password }}"{% if errors.password %} aria-invalid="true"{% endif %}>
+      <p class="field-hint" id="password-hint">At least 8 characters.</p>
+      {{ field_error(errors, 'password') }}
+    </div>
+    <div class="field{{ ' has-error' if errors.confirm_password }}">
+      <label for="confirm_password">Confirm password</label>
+      <input id="confirm_password" name="confirm_password" type="password" autocomplete="new-password" required
+             {% if errors.confirm_password %}aria-describedby="confirm_password-error" aria-invalid="true"{% endif %}>
+      {{ field_error(errors, 'confirm_password') }}
+    </div>
+    <button type="submit" class="btn btn--primary btn--block" data-loading-text="Creating account…">Create account</button>
+  </form>
+  <p class="auth-card__switch">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+</section>
+{% endblock %}

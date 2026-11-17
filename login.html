@@ -1,0 +1,31 @@
+{% extends "base_public.html" %}
+{% from "_macros.html" import csrf_field with context %}
+{% from "_mascot.html" import mascot %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<section class="auth-card panel">
+  <div class="auth-card__brand">
+    {{ mascot(96) }}
+    <p class="brand__name">Mindboarding</p>
+  </div>
+  <h1>Welcome back!</h1>
+  <p class="muted">Log in to see your board.</p>
+
+  {% if error %}<p class="form-alert" role="alert">{{ error }}</p>{% endif %}
+
+  <form method="post" novalidate data-loading-form>
+    {{ csrf_field() }}
+    <input type="hidden" name="next" value="{{ next_url }}">
+    <div class="field">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" value="{{ username }}" autocomplete="username" autocapitalize="none" required autofocus>
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+    </div>
+    <button type="submit" class="btn btn--primary btn--block" data-loading-text="Logging in…">Log in</button>
+  </form>
+  <p class="auth-card__switch">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+</section>
+{% endblock %}
