@@ -1,0 +1,42 @@
+{#- Small hand-drawn colour illustrations for the Quick AI Actions tiles.
+    Usage: {{ art('wand') }}   (names: wand, bulb, message, clipboard)
+    They are decorative, so they are hidden from screen readers. -#}
+{% macro art(name, size=56) -%}
+<svg class="art art--{{ name }}" width="{{ size }}" height="{{ size }}" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+{%- if name == 'wand' %}
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 53 38 28" stroke="#7d2f3a" stroke-width="9"/>
+    <path d="M13 53 38 28" stroke="#c0495a" stroke-width="5.5"/>
+    <path d="M20 46 24 50M26 40 30 44M32 34 36 38" stroke="#f6d6d9" stroke-width="2"/>
+    <path d="m38 28 6-6" stroke="#f0c14b" stroke-width="7"/>
+    <path d="m48 11 1.6 3.9 3.9 1.6-3.9 1.6L48 22l-1.6-3.9-3.9-1.6 3.9-1.6z" fill="#f6b73c" stroke="none"/>
+    <path d="m55 28 1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z" fill="#e4572e" stroke="none"/>
+    <circle cx="36" cy="12" r="2.2" fill="#e4572e" stroke="none"/>
+  </g>
+{%- elif name == 'bulb' %}
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 6V2M12 14 9 11M52 14l3-3M7 30H3M57 30h4" stroke="#f0a722" stroke-width="3" fill="none"/>
+    <path d="M32 8a17 17 0 0 0-9 31.4c1.6 1.2 2.4 2.8 2.4 4.6h13.2c0-1.8.8-3.4 2.4-4.6A17 17 0 0 0 32 8z" fill="#fbd35a" stroke="#d79a1c" stroke-width="3"/>
+    <path d="M25 22a9 9 0 0 1 6-6" stroke="#fff3bf" stroke-width="3" fill="none"/>
+    <path d="M32 44V30M27 26l5 5 5-5" stroke="#d79a1c" stroke-width="2.4" fill="none"/>
+    <rect x="24" y="47" width="16" height="6" rx="3" fill="#b9b2a8" stroke="#8d857a" stroke-width="2"/>
+    <rect x="27" y="54" width="10" height="5" rx="2.5" fill="#8d857a"/>
+  </g>
+{%- elif name == 'message' %}
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 12h40a6 6 0 0 1 6 6v22a6 6 0 0 1-6 6H34l-10 10v-10H12a6 6 0 0 1-6-6V18a6 6 0 0 1 6-6z" fill="#6aa9de" stroke="#3b6fa6" stroke-width="3"/>
+    <path d="M13 19a6 6 0 0 1 6-4h14" stroke="#a9d0f2" stroke-width="3" fill="none"/>
+    <circle cx="22" cy="29" r="3" fill="#fff"/>
+    <circle cx="32" cy="29" r="3" fill="#e4572e"/>
+    <circle cx="42" cy="29" r="3" fill="#fff"/>
+  </g>
+{%- elif name == 'clipboard' %}
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <rect x="11" y="9" width="42" height="49" rx="7" fill="#8e3b57" stroke="#5e2238" stroke-width="3"/>
+    <rect x="17" y="17" width="30" height="35" rx="3" fill="#fdf3f4"/>
+    <rect x="22" y="4" width="20" height="12" rx="4" fill="#d9a6b4" stroke="#5e2238" stroke-width="3"/>
+    <path d="M23 28h18M23 35h18M23 42h11" stroke="#c0495a" stroke-width="3" fill="none"/>
+  </g>
+{%- endif %}
+</svg>
+{%- endmacro %}

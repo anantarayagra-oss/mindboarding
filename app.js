@@ -1,7 +1,8 @@
 /* Mindboarding: small, accessible JavaScript enhancements.
    The site still works without it (forms are normal HTML forms).
    1. Popovers (notifications, user menu)   2. Mobile menu drawer
-   3. "Saving…" state on forms               4. Quiz builder (add / remove questions) */
+   3. "Saving…" state on forms               4. Quiz builder (add / remove questions)
+   5. Time-of-day greeting on the dashboard */
 (function () {
   "use strict";
 
@@ -150,5 +151,14 @@
     });
 
     refreshQuestionList();
+  }
+
+  /* ---------- 5. Time-of-day greeting ---------- */
+  // The server does not know the visitor's time zone, so the browser picks the greeting.
+  // Without JavaScript the page simply says "Hello".
+  var greeting = document.querySelector("[data-greeting]");
+  if (greeting) {
+    var hour = new Date().getHours();
+    greeting.textContent = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
   }
 })();

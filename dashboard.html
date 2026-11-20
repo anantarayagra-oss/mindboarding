@@ -1,11 +1,22 @@
 {% extends "base.html" %}
 {% from "_icons.html" import icon %}
 {% from "_mascot.html" import mascot %}
+{% from "_art.html" import art %}
 {% from "_macros.html" import note_card, donut %}
 {% block title %}Home{% endblock %}
 {% block content %}
 <h1 class="sr-only">Home</h1>
 <div class="dashboard">
+
+  <section class="hero" aria-label="Welcome">
+    <span class="pushpin pushpin--red" aria-hidden="true"></span>
+    <p class="hero__greeting"><span data-greeting>Hello</span>, {{ g.user.username }}!</p>
+    <svg class="hero__scribble" viewBox="0 0 150 14" aria-hidden="true" focusable="false"><path d="M3 10C40 3 90 2 147 5M20 12C60 8 100 8 128 9" fill="none" stroke="#E8A63A" stroke-width="3.2" stroke-linecap="round"/></svg>
+    <p class="hero__sub">Let's make today more productive!</p>
+    <svg class="hero__smile" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M8 18c3 11 21 11 24 0" fill="none" stroke="#C0612B" stroke-width="3" stroke-linecap="round"/><path d="M6 8c1-2 3-3 5-3M34 8c-1-2-3-3-5-3" fill="none" stroke="#C0612B" stroke-width="3" stroke-linecap="round"/></svg>
+    <svg class="hero__sparks" viewBox="0 0 120 50" aria-hidden="true" focusable="false"><path d="M8 38 18 44M40 6l2 14M82 4 78 18M104 20 92 28M113 40l-9 0" fill="none" stroke="#F2B632" stroke-width="5" stroke-linecap="round"/></svg>
+    <div class="hero__mascot">{{ mascot(230) }}</div>
+  </section>
 
   <section class="panel panel--notes" aria-labelledby="notes-heading">
     <header class="panel__header">
@@ -37,12 +48,13 @@
       <header class="panel__header">
         <div class="panel__title">{{ icon('sparkles', 28) }}<h2 id="ai-heading">Quick AI Actions</h2></div>
         <span class="pill pill--soft">Coming soon</span>
+        <a class="link-arrow link-arrow--end" href="{{ url_for('pages.ai_learning') }}" aria-label="Open AI Learning">{{ icon('arrow', 26) }}</a>
       </header>
       <ul class="ai-grid">
         {% for label, icon_name, tone in [('Summarize Note', 'wand', 'lavender'), ('Explain Concept', 'bulb', 'peach'), ('Brainstorm Ideas', 'message', 'blue'), ('Create Quiz', 'clipboard', 'periwinkle')] %}
         <li>
           <button type="button" class="ai-tile ai-tile--{{ tone }}" disabled aria-disabled="true">
-            {{ icon(icon_name, 34) }}
+            {{ art(icon_name) }}
             <span class="ai-tile__label">{{ label }}</span>
             <span class="ai-tile__soon">Coming soon</span>
           </button>
@@ -89,6 +101,15 @@
       </div>
       {% endif %}
     </section>
+
+    <aside class="suggestion" aria-labelledby="suggestion-heading">
+      <div class="suggestion__body">
+        <h2 class="suggestion__title" id="suggestion-heading">{{ icon('bulb', 26) }} Today's Suggestion</h2>
+        <p class="suggestion__text">Try creating a quiz from your recent notes!</p>
+        <a class="btn suggestion__btn" href="{{ url_for('quizzes.create') }}">Create Quiz {{ icon('arrow', 16) }}</a>
+      </div>
+      <div class="suggestion__mascot">{{ mascot(150) }}</div>
+    </aside>
   </div>
 </div>
 {% endblock %}

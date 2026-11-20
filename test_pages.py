@@ -15,6 +15,22 @@ class PageTests(AppTestCase):
         for nav in ("Home", "My Notes", "AI Learning", "Quizzes", "Insights", "Account", "Log Out"):
             self.assertIn(nav, html)
 
+    def test_dashboard_greeting_and_suggestion_panels(self):
+        html = self.text(self.client.get("/"))
+        self.assertIn("alice!", html)                      # greeting uses the signed-in username
+        self.assertIn("Let's make today more productive!", html)
+        self.assertIn("Today's Suggestion", html)
+        self.assertIn("/quizzes/new", html)                # the suggestion button opens the quiz builder
+
+    def test_dashboard_uses_no_inline_styles(self):
+        # The Content-Security-Policy blocks inline styles, so the design must live in style.css.
+        self.assertNotIn(' style="', self.text(self.client.get("/")))
+
+    def test_sidebar_says_account_not_settings(self):
+        html = self.text(self.client.get("/"))
+        self.assertIn("Account", html)
+        self.assertNotIn("Settings", html)
+
     def test_quick_ai_actions_are_disabled_placeholders(self):
         html = self.text(self.client.get("/"))
         self.assertEqual(html.count("ai-tile ai-tile--"), 4)
