@@ -229,9 +229,15 @@ For production deployment, configure a persistent secret key, HTTPS, secure cook
 - AI features require a valid Gemini API key and an internet connection.
 - AI-generated content should be reviewed for accuracy before being used as study material.
 
-## AI Assistance Attribution
+## ## AI Assistance Disclosure
 
-AI tools were used during development to assist with brainstorming, code suggestions, debugging, and documentation. The project author reviewed and adapted suggestions, made implementation decisions, and tested the application. The author remains responsible for understanding the submitted code and explaining its functionality.
+AI tools, including ChatGPT and Claude, were used as development assistants during the creation of Mindboarding. They helped with discussing implementation approaches, generating and revising code snippets, debugging errors, reviewing application structure, suggesting tests, and preparing project documentation.
+
+The developer reviewed the suggestions, ran the application and tests, evaluated the proposed changes, and made decisions about their implementation.
+
+The application also integrates the Google Gemini API to provide AI-powered features, including note summarization, quiz generation, concept explanations, and brainstorming. Gemini is used as part of the application's functionality and is separate from the AI tools used during development.
+
+These tools and their contributions are disclosed to maintain transparency about the development process.
 
 ---
 
